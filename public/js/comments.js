@@ -1,13 +1,16 @@
 export default class CommentPoster {
     constructor() {
       this.postNum = ''
+      this.pdf = ''
     }
   
     async getRows(pdf,postNum) {
-      let url = `https://script.google.com/macros/s/AKfycbyRS-CkZg1Y9eYsTWIBt_azYN2GWPKJS0koUTNc7CCVMeojIEeBff5Hne5GL135wslm/exec?pdfName=${pdf}`;
+      this.pdf = pdf
       this.postNum = postNum
-      console.log(this.postNum)
-      
+      let url = `https://script.google.com/macros/s/AKfycbyRS-CkZg1Y9eYsTWIBt_azYN2GWPKJS0koUTNc7CCVMeojIEeBff5Hne5GL135wslm/exec?pdfName=${pdf}`;
+
+      console.log("se acaba de asignar el valor " + this.postNum)
+  
       try {
         const response = await fetch(url);
         const data = await response.json();
@@ -31,16 +34,48 @@ export default class CommentPoster {
       }
     }
   
-    postComment() {
-      // Add event listener to the comment form
-      let names = document.getElementById('name').value;
-  let comments = document.getElementById('comment').value;
+    
+    async afterPost() {
+      
+      document.getElementById('commentsList').innerHTML = " "
+      
+      
+
+      let url = `https://script.google.com/macros/s/AKfycbyRS-CkZg1Y9eYsTWIBt_azYN2GWPKJS0koUTNc7CCVMeojIEeBff5Hne5GL135wslm/exec?pdfName=${this.pdf}`;
+
+      console.log("se acaba de asignar el valor " + this.postNum)
   
-      const url = `https://script.google.com/macros/s/AKfycbyRS-CkZg1Y9eYsTWIBt_azYN2GWPKJS0koUTNc7CCVMeojIEeBff5Hne5GL135wslm/exec?action=${this.postNum}`;
-      document.getElementById('commentForm').addEventListener('submit', (event) => {
-        event.preventDefault(); // Prevent default form submission
-          
-console.log(this.postNum)
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
+        data.map(obj => {
+          // Create li element
+          const li = document.createElement('li');
+          li.classList.add('list-group-item');
+          // Set inner HTML of the li element with name and comment
+          li.innerHTML = `<strong>${obj.Name}:</strong> ${obj.Comment}`;
+          // Append the li element to the ul parent
+          commentsList.appendChild(li);
+        });
+        return data;
+      } catch (error) {
+        const li = document.createElement('li');
+        li.classList.add('list-group-item');
+        // Set inner HTML of the li element with error message
+        li.innerHTML = "Error al capturar comentarios. Intente de nuevo o contacte al administrador.";
+        // Append the li element to the ul parent
+        document.getElementById('commentsList').appendChild(li);
+      }
+    }
+
+
+    postComment(name,comment) {
+     // Add event listener to the comment form
+    
+  const url = `https://script.google.com/macros/s/AKfycbyRS-CkZg1Y9eYsTWIBt_azYN2GWPKJS0koUTNc7CCVMeojIEeBff5Hne5GL135wslm/exec?action=${this.postNum}`;
+      
+         
+console.log("se esta jeecutatdo " + this.postNum)
 
         // Post data to the API endpoint
         fetch(url, {
@@ -50,24 +85,25 @@ console.log(this.postNum)
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            name: names,
-            comment: comments
+            name: name.value,
+            comment: comment.value
           })
         })
         .then(response => response.text())
-        .then(data => {
+        .then(data => { 
           console.log("Insercion Exitosa");
         
         }) // Handle successful response
         .catch(error => console.error('Error posting data to API:', error)); // Handle error
 
         
-      });
- 
-      names = "";
-      comments = "";
-      
+        name.value = "";
+        comment.value = "";
+
       console.log("despues ejecucuion");
+
+      this.afterPost();
+      
     }
 
     

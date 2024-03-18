@@ -47,13 +47,9 @@ pdfThumbnails.forEach((thumbnail) => {
 
 document.getElementById('commentForm').addEventListener('submit', (event) => {
   event.preventDefault(); // Prevent default form submission
-  
-
-  commentPoster.postComment()
-
-
-
-
+  let name = document.getElementById('name');
+  let comment = document.getElementById('comment');
+  commentPoster.postComment(name,comment)
   // Clear form fields after posting
 });
 
