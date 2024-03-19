@@ -19,10 +19,10 @@
   "homepage": "https://github.com/J2ZROMERO/Estadisticas#readme",
   "dependencies": {
     "autoprefixer": "^10.4.18",
+    "express": "^4.18.3"
+  },
+  "devDependencies": {
     "bootstrap": "^5.3.3",
-    "cors": "^2.8.5",
-    "express": "^4.18.3",
-    "expresss": "^0.0.0",
     "sass": "^1.72.0"
   }
 }
