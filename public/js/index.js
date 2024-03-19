@@ -50,9 +50,15 @@ document.getElementById('commentForm').addEventListener('submit', (event) => {
   let name = document.getElementById('name');
   let comment = document.getElementById('comment');
   commentPoster.postComment(name,comment)
-  // Clear form fields after posting
-});
+  
+  commentForm.classList.toggle('d-none'); // Toggle visibility of comment form
+  if (!commentForm.classList.contains('d-none')) {
+    toggleCommentFormButton.textContent = 'No comment? Click here to hide the form.';
+  } else {
+    toggleCommentFormButton.textContent = 'Add Comment';
+  }
 
+});
 
 
 // Initialize modal manually
@@ -74,4 +80,23 @@ document.querySelector('.btn-close').addEventListener('click', function(e) {
   document.getElementById('commentsList').innerHTML = " "
 })
 
+
+// JavaScript to toggle comment form visibility and change button text
+
+  document.addEventListener('DOMContentLoaded', function() {
+    toggleCommentFormButton.addEventListener('click', () => {
+      commentForm.classList.toggle('d-none'); // Toggle visibility of comment form
+      if (!commentForm.classList.contains('d-none')) {
+        toggleCommentFormButton.textContent = 'No comment? Click here to hide the form.';
+      } else {
+        toggleCommentFormButton.textContent = 'Add Comment';
+      }
+    });
+  });
+
+
+
+
+  const toggleCommentFormButton = document.getElementById('toggleCommentForm');
+  const commentForm = document.getElementById('commentForm');
 

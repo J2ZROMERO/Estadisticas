@@ -37,17 +37,19 @@ export default class CommentPoster {
     
     async afterPost() {
       
-      document.getElementById('commentsList').innerHTML = " "
+      document.getElementById('commentsList').innerHTML = ""
       
       
 
       let url = `https://script.google.com/macros/s/AKfycbyRS-CkZg1Y9eYsTWIBt_azYN2GWPKJS0koUTNc7CCVMeojIEeBff5Hne5GL135wslm/exec?pdfName=${this.pdf}`;
 
-      console.log("se acaba de asignar el valor " + this.postNum)
+      
+      
   
       try {
         const response = await fetch(url);
         const data = await response.json();
+        document.getElementById('commentsList').innerHTML = ""
         data.map(obj => {
           // Create li element
           const li = document.createElement('li');
@@ -75,7 +77,7 @@ export default class CommentPoster {
   const url = `https://script.google.com/macros/s/AKfycbyRS-CkZg1Y9eYsTWIBt_azYN2GWPKJS0koUTNc7CCVMeojIEeBff5Hne5GL135wslm/exec?action=${this.postNum}`;
       
          
-console.log("se esta jeecutatdo " + this.postNum)
+
 
         // Post data to the API endpoint
         fetch(url, {
@@ -90,21 +92,30 @@ console.log("se esta jeecutatdo " + this.postNum)
           })
         })
         .then(response => response.text())
-        .then(data => { 
-          console.log("Insercion Exitosa");
-        
-        }) // Handle successful response
-        .catch(error => console.error('Error posting data to API:', error)); // Handle error
+        .then(data => { this.afterPost() })
+         
+        .catch(error =>  {this.showErrorPopup("Ups! there is an error, try it later.")}); // Handle error
 
-        
+        // clean inputs after posting comment  
         name.value = "";
         comment.value = "";
 
-      console.log("despues ejecucuion");
-
-      this.afterPost();
       
     }
+
+
+   showErrorPopup(message) {
+    const errorPopup = document.getElementById('errorPopup');
+    const errorMessage = document.getElementById('errorMessage');
+    errorMessage.textContent = message;
+    errorPopup.classList.remove('d-none');
+  
+
+    setTimeout(() => {
+      errorPopup.classList.add('d-none');
+    }, 3000); // Adjust the duration (in milliseconds) as needed
+  }
+  
 
     
   }
