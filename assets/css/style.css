@@ -11844,5 +11844,64 @@ textarea.form-control-lg {
     display: none !important;
   }
 }
+.pdf-thumbnail {
+  cursor: pointer;
+  max-height: 78% !important;
+  min-height: 78% !important;
+}
+
+.error-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #ff0000;
+  color: #ffffff;
+  padding: 10px 20px;
+  border-radius: 5px;
+  z-index: 9999;
+}
+
+.card-body {
+  display: flex;
+  justify-content: center;
+  align-items: end;
+}
+
+.d-none {
+  display: none;
+}
+
+.modal-body {
+  height: calc(100% - 56px); /* Ensure modal body fills the available height (minus header height) */
+}
+
+.embed-responsive-16by9 {
+  height: 90%; /* Ensure PDF iframe fills entire modal body height */
+}
+
+iframe {
+  width: 100%;
+  height: 100%;
+}
+
+/* Custom CSS for sticky footer */
+html,
+body {
+  height: 100%;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex: 1;
+}
+
+.footer {
+  flex-shrink: 0;
+}
 
 /*# sourceMappingURL=style.css.map */
