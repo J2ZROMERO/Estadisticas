@@ -3,7 +3,7 @@ import CommentPoster from './comments.js'
 
 const commentPoster = new CommentPoster();
 
-let pdfViewer = document.getElementById('pdfCanvasContainer');
+let pdfViewer = document.getElementById('pdfViewer');
 let commentField = document.getElementById('comment');
 
 let pdfThumbnails = document.querySelectorAll('.pdf-thumbnail');
@@ -14,15 +14,15 @@ pdfThumbnails.forEach((thumbnail) => {
     
     pdfViewer.src = pdfUrl;
     if(e.target.parentElement.classList[2]== 'Aerogynamics'){
-      commentPoster.getRows('pdf1','post1','Aerogynamics')
+       commentPoster.getRows('pdf1','post1','Aerogynamics')
       
     }
     if(e.target.parentElement.classList[2]== 'Cats'){
-      commentPoster.getRows('pdf2','post2','Cats')
+       commentPoster.getRows('pdf2','post2','Cats')
       
     }
     if(e.target.parentElement.classList[2]== 'colors'){
-      commentPoster.getRows('pdf3','post3','colors')
+       commentPoster.getRows('pdf3','post3','colors')
       
     }
         if(e.target.parentElement.classList[2]== 'rabbit'){
@@ -30,11 +30,11 @@ pdfThumbnails.forEach((thumbnail) => {
       
     }
     if(e.target.parentElement.classList[2]== 'communism'){
-      commentPoster.getRows('pdf5','post5','communism')
+       commentPoster.getRows('pdf5','post5','communism')
       
     }
     if(e.target.parentElement.classList[2]== 'pull-ups'){
-      commentPoster.getRows('pdf6','post6')
+       commentPoster.getRows('pdf6','post6')
       
     }
 

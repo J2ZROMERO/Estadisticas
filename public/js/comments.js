@@ -8,7 +8,7 @@ export default class CommentPoster {
     async getRows(pdf,postNum,uri) {
 
       this.uri=uri
-      this.loadPdf() 
+      
            
 
       this.pdf = pdf
@@ -122,44 +122,6 @@ export default class CommentPoster {
     }, 3000); // Adjust the duration (in milliseconds) as needed
   }
   
-
-  loadPdf() {
-    // Load PDF document
-const url = `./resources/pdfs/${this.uri}.pdf`; // Replace 'example.pdf' with the path to your PDF file
-const loadingTask = pdfjsLib.getDocument(url); // Change 'pdfjs' to 'pdfjsLib'
-loadingTask.promise.then(pdf => {
-  const numPages = pdf.numPages; // Get total number of pages
-  const canvasContainer = document.getElementById('pdfCanvasContainer');
-
-  // Loop through each page
-  for (let pageNumber = 1; pageNumber <= numPages; pageNumber++) {
-    pdf.getPage(pageNumber).then(page => {
-      const canvas = document.createElement('canvas');
-      const context = canvas.getContext('2d');
-
-      // Set scale to 1 for normal resolution
-      const viewport = page.getViewport({ scale: 2 });
-
-      // Set canvas dimensions to match the PDF page
-      canvas.width = viewport.width;
-      canvas.height = viewport.height;
-
-      // Append canvas to container
-      canvasContainer.appendChild(canvas);
-
-      // Render PDF page into canvas context
-      const renderContext = {
-        canvasContext: context,
-        viewport: viewport
-      };
-      page.render(renderContext);
-    });
-  }
-}).catch(error => {
-  console.error('Error loading PDF:', error);
-});
-
-  }  
   }
   
   
