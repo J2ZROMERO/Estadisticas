@@ -19,7 +19,8 @@
   "homepage": "https://github.com/J2ZROMERO/Estadisticas#readme",
   "dependencies": {
     "autoprefixer": "^10.4.18",
-    "express": "^4.18.3"
+    "express": "^4.18.3",
+    "pdfjs-dist": "^4.0.379"
   },
   "devDependencies": {
     "bootstrap": "^5.3.3",

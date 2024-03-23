@@ -1,6 +1,5 @@
 import CommentPoster from './comments.js'
 
-
 const commentPoster = new CommentPoster();
 
 let pdfViewer = document.getElementById('pdfViewer');
@@ -12,7 +11,14 @@ pdfThumbnails.forEach((thumbnail) => {
     
     let pdfUrl = this.getAttribute('data-pdf');
     
+console.log(pdfUrl + "asdsadasdsadsad")
+
+
     pdfViewer.src = pdfUrl;
+
+
+
+
     if(e.target.parentElement.classList[2]== 'Aerogynamics'){
        commentPoster.getRows('pdf1','post1','Aerogynamics')
       
