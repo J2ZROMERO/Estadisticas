@@ -7,12 +7,11 @@
 
   
   <script src="/node_modules/pdfjs-dist/build/pdf.mjs" type="module"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
-
-
-
-
-  <link rel="stylesheet" href="../assets/css/style.css" type="text/html">
+  <link rel="stylesheet" href="/assets/css/style.css" type="text/html">
+  
+  
   <style>
 
     .pdf-thumbnail {
@@ -97,25 +96,12 @@
   
   
 
-  
-<div>
-  <button id="prev">Previous</button>
-  <button id="next">Next</button>
-  &nbsp; &nbsp;
-  <span>Page: <span id="page_num"></span> / <span id="page_count"></span></span>
-</div>
-
-<canvas id="the-canvas"></canvas>
 
   
   <!-- Comment form for PDF (initially hidden) -->
 <div id="errorPopup" class="error-popup d-none">
   <span id="errorMessage"></span>
 </div>
-
-
-<canvas id="the-canvas"></canvas>
-
 
   <header class="p-3 mb-3 bg-danger text-white">
     <h1>PDF reading and comment.</h1>
@@ -215,8 +201,22 @@
         </div>
         <div class="modal-body">
           <div class="embed-responsive embed-responsive-16by9">
-            <iframe class="embed-responsive-item" id="pdfViewer" src="" allowfullscreen></iframe>
-            <!-- <div id="pdfViewer"  width="800" height="600"></div> -->
+            <!-- <iframe class="embed-responsive-item" id="pdfViewer" src="" allowfullscreen></iframe>
+            <div id="pdfViewer"  width="800" height="600"></div> -->
+
+
+
+<canvas id="pdfViewer"></canvas>
+
+<div class="container text-center ">
+  <div><span><span id="page_num"></span> / <span id="page_count"></span></span></div> 
+  &nbsp; &nbsp;
+  <br>
+  <button class="btn bg-secondary text-white"  id="prev"><</button>
+  <button class="btn bg-secondary  text-white" id="next">></button>
+</div>
+
+
           </div>
           <!-- New section for comments -->
           <div class="mt-3">
@@ -282,7 +282,7 @@
       pageRendering = false,
       pageNumPending = null,
       scale = 0.8,
-      canvas = document.getElementById('the-canvas'),
+      canvas = document.getElementById('pdfViewer'),
       ctx = canvas.getContext('2d');
 
   /**
@@ -367,22 +367,15 @@
   });
 </script>
 
-<h1>PDF.js Previous/Next example</h1>
 
 
 
-<div>
-  <button id="prev">Previous</button>
-  <button id="next">Next</button>
-  &nbsp; &nbsp;
-  <span>Page: <span id="page_num"></span> / <span id="page_count"></span></span>
-</div>
 
 
 
 
   
-  <script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
 
   <script src="./js/index.js" type="module">  </script>
 </body>
