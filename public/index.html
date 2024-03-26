@@ -85,7 +85,59 @@
       display: block;
       margin: 0 auto;
     }
-    
+    body, html {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    #pdfViewerContainer {
+      width: 100%;
+      height: calc(100% - 50px); /* Adjust height for controls */
+      overflow-y: scroll;
+      position: relative;
+    }
+    .pdf-page {
+      display: block;
+      margin: auto;
+      margin-bottom: 20px; /* Add margin between pages */
+    }
+    .spacer {
+      height: 20px; /* Adjust the black space height between pages */
+    }
+    #pdfViewerContainer {
+      width: 100%;
+      height: calc(100% - 50px); /* Adjust height for controls */
+      overflow-y: scroll;
+      position: relative;
+    }
+    .pdf-page {
+      display: block;
+      margin: auto;
+      margin-bottom: 20px; /* Add margin between pages */
+    }
+    .spacer {
+      height: 20px; /* Adjust the space height between pages */
+    }
+    #controls {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background-color: #f0f0f0;
+      padding: 10px;
+      box-sizing: border-box;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .btn {
+      cursor: pointer;
+      padding: 5px 10px;
+      border-radius: 5px;
+      background-color: #007bff;
+      color: #fff;
+    }
+  </style>
     </style>
       
 
@@ -93,11 +145,130 @@
 </head>
 <body>
 
-  
+  <div id="pdfViewerContainer"></div>
+  <div id="controls">
+    <button class="btn" id="zoomOutBtn">-</button>
+    <button class="btn" id="zoomInBtn">+</button>
+    
+    <button class="btn" id="downloadBtn">Download</button>
+    <div id="pageCount"></div>
+  </div>
+
   
 
 
+
   
+    <script type="module">
+      var { pdfjsLib } = globalThis;
+      pdfjsLib.GlobalWorkerOptions.workerSrc = '../node_modules/pdfjs-dist/build/pdf.worker.mjs';
+  
+      var url = './resources/pdfs/Cats.pdf';
+      var pdfDoc = null,
+        scale = .5,
+        pdfViewerContainer = document.getElementById('pdfViewerContainer'),
+        pageCount = document.getElementById('pageCount');
+  
+        function renderPages(pdfDoc) {
+    pdfViewerContainer.innerHTML = ''; // Clear existing pages
+    for (var pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
+      var pageContainer = document.createElement('div');
+      pageContainer.className = 'pdf-page-container';
+      pdfViewerContainer.appendChild(pageContainer);
+      pdfDoc.getPage(pageNum).then(function(page) {
+        var viewport = page.getViewport({ scale: scale });
+        var canvas = document.createElement('canvas');
+        canvas.className = 'pdf-page';
+        pageContainer.appendChild(canvas);
+        var context = canvas.getContext('2d');
+  
+        // Adjust canvas size to cover a significant portion of the view
+        var containerHeight = pdfViewerContainer.clientHeight;
+        var containerWidth = pdfViewerContainer.clientWidth;
+        var pageWidth = viewport.width;
+        var pageHeight = viewport.height;
+        
+        // Calculate the scale to fit the entire page in the container
+        var scaleX = containerWidth / pageWidth;
+        var scaleY = containerHeight / pageHeight;
+        var fitScale = Math.min(scaleX, scaleY);
+        
+        // Apply the fit scale to the viewport
+        viewport = page.getViewport({ scale: fitScale });
+  
+        // Render PDF page onto the canvas
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+        var renderContext = {
+          canvasContext: context,
+          viewport: viewport
+        };
+        page.render(renderContext);
+  
+        // Add spacer between pages
+        if (pageNum < pdfDoc.numPages) {
+          var spacer = document.createElement('div');
+          spacer.className = 'spacer';
+          pdfViewerContainer.appendChild(spacer);
+        }
+      });
+    }
+  }
+  
+  
+      function updatePageCount(pageNum) {
+        pageCount.textContent = 'Page ' + pageNum + ' of ' + pdfDoc.numPages;
+      }
+  
+      function adjustScale(newScale) {
+        if (newScale < 0.1) {
+          scale = 0.1;
+        } else {
+          scale = newScale;
+        }
+        renderPages(pdfDoc);
+      }
+  
+      document.getElementById('zoomInBtn').addEventListener('click', function() {
+        adjustScale(scale + 0.1);
+      });
+  
+      document.getElementById('zoomOutBtn').addEventListener('click', function() {
+        adjustScale(scale - 0.1);
+      });
+  
+      document.getElementById('downloadBtn').addEventListener('click', function() {
+        window.open(url, '_blank');
+      });
+  
+      pdfjsLib.getDocument(url).promise.then(function(pdfDoc_) {
+        pdfDoc = pdfDoc_;
+        renderPages(pdfDoc);
+      });
+  
+      // Add event listener for scroll events on the PDF container
+      pdfViewerContainer.addEventListener('scroll', function() {
+        var scrollTop = pdfViewerContainer.scrollTop;
+        var pageHeight = pdfViewerContainer.clientHeight;
+        var totalHeight = pdfViewerContainer.scrollHeight;
+        var totalPages = pdfDoc.numPages;
+  
+        // Calculate current page based on scroll position
+        var currentPage = Math.ceil((totalPages * scrollTop) / (totalHeight - pageHeight));
+  
+        // Update page count
+        updatePageCount(currentPage);
+      });
+    </script>
+
+
+
+
+
+
+
+
+
   <!-- Comment form for PDF (initially hidden) -->
 <div id="errorPopup" class="error-popup d-none">
   <span id="errorMessage"></span>
@@ -206,7 +377,10 @@
 
 
 
-<canvas id="pdfViewer"></canvas>
+            <div id="pdfViewerContainer">
+              <canvas id="pdfViewer"></canvas>
+            </div>
+            
 
 <div class="container text-center ">
   <div><span><span id="page_num"></span> / <span id="page_count"></span></span></div> 
@@ -262,111 +436,6 @@
     </div>
   </footer>
  
-
-
-
-
-<script type="module">
-  // If absolute URL from the remote server is provided, configure the CORS
-  // header on that server.
-  var url = './resources/pdfs/Cats.pdf';
-
-  // Loaded via <script> tag, create shortcut to access PDF.js exports.
-  var { pdfjsLib } = globalThis;
-
-  // The workerSrc property shall be specified.
-  pdfjsLib.GlobalWorkerOptions.workerSrc = '../node_modules/pdfjs-dist/build/pdf.worker.mjs';
-
-  var pdfDoc = null,
-      pageNum = 1,
-      pageRendering = false,
-      pageNumPending = null,
-      scale = 0.8,
-      canvas = document.getElementById('pdfViewer'),
-      ctx = canvas.getContext('2d');
-
-  /**
-   * Get page info from document, resize canvas accordingly, and render page.
-   * @param num Page number.
-   */
-  function renderPage(num) {
-    pageRendering = true;
-    // Using promise to fetch the page
-    pdfDoc.getPage(num).then(function(page) {
-      var viewport = page.getViewport({scale: scale});
-      canvas.height = viewport.height;
-      canvas.width = viewport.width;
-
-      // Render PDF page into canvas context
-      var renderContext = {
-        canvasContext: ctx,
-        viewport: viewport
-      };
-      var renderTask = page.render(renderContext);
-
-      // Wait for rendering to finish
-      renderTask.promise.then(function() {
-        pageRendering = false;
-        if (pageNumPending !== null) {
-          // New page rendering is pending
-          renderPage(pageNumPending);
-          pageNumPending = null;
-        }
-      });
-    });
-
-    // Update page counters
-    document.getElementById('page_num').textContent = num;
-  }
-
-  /**
-   * If another page rendering in progress, waits until the rendering is
-   * finised. Otherwise, executes rendering immediately.
-   */
-  function queueRenderPage(num) {
-    if (pageRendering) {
-      pageNumPending = num;
-    } else {
-      renderPage(num);
-    }
-  }
-
-  /**
-   * Displays previous page.
-   */
-  function onPrevPage() {
-    if (pageNum <= 1) {
-      return;
-    }
-    pageNum--;
-    queueRenderPage(pageNum);
-  }
-  document.getElementById('prev').addEventListener('click', onPrevPage);
-
-  /**
-   * Displays next page.
-   */
-  function onNextPage() {
-    if (pageNum >= pdfDoc.numPages) {
-      return;
-    }
-    pageNum++;
-    queueRenderPage(pageNum);
-  }
-  document.getElementById('next').addEventListener('click', onNextPage);
-
-  /**
-   * Asynchronously downloads PDF.
-   */
-  pdfjsLib.getDocument(url).promise.then(function(pdfDoc_) {
-    pdfDoc = pdfDoc_;
-    document.getElementById('page_count').textContent = pdfDoc.numPages;
-
-    // Initial/first page rendering
-    renderPage(pageNum);
-  });
-</script>
-
 
 
 
