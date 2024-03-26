@@ -11844,5 +11844,151 @@ textarea.form-control-lg {
     display: none !important;
   }
 }
+.pdf-thumbnail {
+  cursor: pointer;
+  max-height: 78% !important;
+  min-height: 78% !important;
+}
+
+#pdfViewerContainer {
+  position: relative;
+}
+
+#loadingSpinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /* Add additional styles for the loading spinner (e.g., size, color, animation) */
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 3px solid rgba(0, 0, 0, 0.1);
+  border-top-color: #3498db;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.error-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #ff0000;
+  color: #ffffff;
+  padding: 10px 20px;
+  border-radius: 5px;
+  z-index: 9999;
+}
+
+.card-body {
+  display: flex;
+  justify-content: center;
+  align-items: end;
+}
+
+.d-none {
+  display: none;
+}
+
+.modal-body {
+  height: calc(100% - 56px); /* Ensure modal body fills the available height (minus header height) */
+}
+
+.embed-responsive-16by9 {
+  height: 90%; /* Ensure PDF iframe fills entire modal body height */
+}
+
+iframe {
+  width: 100%;
+  height: 100%;
+}
+
+/* Custom CSS for sticky footer */
+html,
+body {
+  height: 100%;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex: 1;
+}
+
+.footer {
+  flex-shrink: 0;
+}
+
+#pdfCanvasContainer {
+  width: 100% !important; /* Set width to 50vh */
+  height: 100% !important; /* Set height to 50vh */
+  overflow-y: scroll; /* Enable vertical scrolling */
+}
+
+canvas {
+  display: block;
+  margin: 0 auto;
+}
+
+body, html {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#pdfViewerContainer {
+  width: 100%;
+  height: calc(100% - 50px); /* Adjust height for controls */
+  overflow-y: scroll;
+  position: relative;
+}
+
+.pdf-page {
+  display: block;
+  margin: auto;
+  margin-bottom: 20px; /* Add margin between pages */
+}
+
+.spacer {
+  height: 20px; /* Adjust the black space height between pages */
+}
+
+#pdfViewerContainer {
+  width: 100%;
+  height: calc(100% - 50px); /* Adjust height for controls */
+  overflow-y: scroll;
+  position: relative;
+}
+
+.pdf-page {
+  display: block;
+  margin: auto;
+  margin-bottom: 20px; /* Add margin between pages */
+}
+
+.spacer {
+  height: 20px; /* Adjust the space height between pages */
+}
+
+#controls {
+  width: 100%;
+  background-color: #f0f0f0;
+  padding: 10px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
 /*# sourceMappingURL=style.css.map */

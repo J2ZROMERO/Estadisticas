@@ -7,263 +7,21 @@
 
   
   <script src="/node_modules/pdfjs-dist/build/pdf.mjs" type="module"></script>
+  <link rel="stylesheet" href="/node_modules/@fortawesome/fontawesome-free/css/all.min.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
-  <link rel="stylesheet" href="/assets/css/style.css" type="text/html">
+  <link rel="stylesheet" href="/assets/css/style.css" type="text/css">
   
   
-  <style>
-
-    .pdf-thumbnail {
-        cursor: pointer;
-        max-height: 78% !important;
-        min-height: 78% !important;
-      }
     
-      .error-popup {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: #ff0000;
-    color: #ffffff;
-    padding: 10px 20px;
-    border-radius: 5px;
-    z-index: 9999;
-    }
-    
-    
-    .card-body{
-    display: flex;
-    justify-content: center;
-    align-items: end;
-    }
-    
-    
-    .d-none {
-    display: none;
-    }
-    
-    
-      .modal-body {
-        height: calc(100% - 56px); /* Ensure modal body fills the available height (minus header height) */
-      }
-      .embed-responsive-16by9 {
-        height: 90%; /* Ensure PDF iframe fills entire modal body height */
-      }
-      iframe {
-        width: 100%;
-        height: 100%;
-      }
-    
-      /* Custom CSS for sticky footer */
-      html,
-      body {
-        height: 100%;
-      }
-    
-      .wrapper {
-        display: flex;
-        flex-direction: column;
-      }
-    
-      .content {
-        flex: 1;
-      }
-    
-      .footer {
-        flex-shrink: 0;
-      }
-
-      #pdfCanvasContainer {
-
-      width: 100% !important; /* Set width to 50vh */
-      height: 100% !important; /* Set height to 50vh */
-      overflow-y: scroll; /* Enable vertical scrolling */
-    }
-    canvas {
-      display: block;
-      margin: 0 auto;
-    }
-    body, html {
-      height: 100%;
-      margin: 0;
-      padding: 0;
-    }
-    #pdfViewerContainer {
-      width: 100%;
-      height: calc(100% - 50px); /* Adjust height for controls */
-      overflow-y: scroll;
-      position: relative;
-    }
-    .pdf-page {
-      display: block;
-      margin: auto;
-      margin-bottom: 20px; /* Add margin between pages */
-    }
-    .spacer {
-      height: 20px; /* Adjust the black space height between pages */
-    }
-    #pdfViewerContainer {
-      width: 100%;
-      height: calc(100% - 50px); /* Adjust height for controls */
-      overflow-y: scroll;
-      position: relative;
-    }
-    .pdf-page {
-      display: block;
-      margin: auto;
-      margin-bottom: 20px; /* Add margin between pages */
-    }
-    .spacer {
-      height: 20px; /* Adjust the space height between pages */
-    }
-    #controls {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      background-color: #f0f0f0;
-      padding: 10px;
-      box-sizing: border-box;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .btn {
-      cursor: pointer;
-      padding: 5px 10px;
-      border-radius: 5px;
-      background-color: #007bff;
-      color: #fff;
-    }
-  </style>
-    </style>
       
 
     
 </head>
 <body>
 
-  <div id="pdfViewerContainer"></div>
-  <div id="controls">
-    <button class="btn" id="zoomOutBtn">-</button>
-    <button class="btn" id="zoomInBtn">+</button>
-    
-    <button class="btn" id="downloadBtn">Download</button>
-    <div id="pageCount"></div>
-  </div>
-
-  
-
-
-
-  
-    <script type="module">
-      var { pdfjsLib } = globalThis;
-      pdfjsLib.GlobalWorkerOptions.workerSrc = '../node_modules/pdfjs-dist/build/pdf.worker.mjs';
-  
-      var url = './resources/pdfs/Cats.pdf';
-      var pdfDoc = null,
-        scale = .5,
-        pdfViewerContainer = document.getElementById('pdfViewerContainer'),
-        pageCount = document.getElementById('pageCount');
-  
-        function renderPages(pdfDoc) {
-    pdfViewerContainer.innerHTML = ''; // Clear existing pages
-    for (var pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
-      var pageContainer = document.createElement('div');
-      pageContainer.className = 'pdf-page-container';
-      pdfViewerContainer.appendChild(pageContainer);
-      pdfDoc.getPage(pageNum).then(function(page) {
-        var viewport = page.getViewport({ scale: scale });
-        var canvas = document.createElement('canvas');
-        canvas.className = 'pdf-page';
-        pageContainer.appendChild(canvas);
-        var context = canvas.getContext('2d');
-  
-        // Adjust canvas size to cover a significant portion of the view
-        var containerHeight = pdfViewerContainer.clientHeight;
-        var containerWidth = pdfViewerContainer.clientWidth;
-        var pageWidth = viewport.width;
-        var pageHeight = viewport.height;
-        
-        // Calculate the scale to fit the entire page in the container
-        var scaleX = containerWidth / pageWidth;
-        var scaleY = containerHeight / pageHeight;
-        var fitScale = Math.min(scaleX, scaleY);
-        
-        // Apply the fit scale to the viewport
-        viewport = page.getViewport({ scale: fitScale });
-  
-        // Render PDF page onto the canvas
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
-        var renderContext = {
-          canvasContext: context,
-          viewport: viewport
-        };
-        page.render(renderContext);
-  
-        // Add spacer between pages
-        if (pageNum < pdfDoc.numPages) {
-          var spacer = document.createElement('div');
-          spacer.className = 'spacer';
-          pdfViewerContainer.appendChild(spacer);
-        }
-      });
-    }
-  }
   
   
-      function updatePageCount(pageNum) {
-        pageCount.textContent = 'Page ' + pageNum + ' of ' + pdfDoc.numPages;
-      }
-  
-      function adjustScale(newScale) {
-        if (newScale < 0.1) {
-          scale = 0.1;
-        } else {
-          scale = newScale;
-        }
-        renderPages(pdfDoc);
-      }
-  
-      document.getElementById('zoomInBtn').addEventListener('click', function() {
-        adjustScale(scale + 0.1);
-      });
-  
-      document.getElementById('zoomOutBtn').addEventListener('click', function() {
-        adjustScale(scale - 0.1);
-      });
-  
-      document.getElementById('downloadBtn').addEventListener('click', function() {
-        window.open(url, '_blank');
-      });
-  
-      pdfjsLib.getDocument(url).promise.then(function(pdfDoc_) {
-        pdfDoc = pdfDoc_;
-        renderPages(pdfDoc);
-      });
-  
-      // Add event listener for scroll events on the PDF container
-      pdfViewerContainer.addEventListener('scroll', function() {
-        var scrollTop = pdfViewerContainer.scrollTop;
-        var pageHeight = pdfViewerContainer.clientHeight;
-        var totalHeight = pdfViewerContainer.scrollHeight;
-        var totalPages = pdfDoc.numPages;
-  
-        // Calculate current page based on scroll position
-        var currentPage = Math.ceil((totalPages * scrollTop) / (totalHeight - pageHeight));
-  
-        // Update page count
-        updatePageCount(currentPage);
-      });
-    </script>
-
-
-
-
 
 
 
@@ -287,11 +45,11 @@
          
           <!-- Starting cards elements-->
           <div class="col">
-            <div class="card h-100 Aerodynamics">
-              <img src="./resources/aerodinamicsBook.png" class="card-img-top pdf-thumbnail" alt="PDF Thumbnail" 
-              data-bs-toggle="modal" data-bs-target="#pdfModal" data-pdf="./resources/pdfs/Aerodynamics.pdf">
+            <div class="card h-100 happines">
+              <img src="./resources/happines.png" class="card-img-top pdf-thumbnail" alt="PDF Thumbnail" 
+              data-bs-toggle="modal" data-bs-target="#pdfModal" data-pdf="./resources/pdfs/happines.pdf">
               <div class="card-body">
-                <h5 class="card-title">Author: Leonard Bairstow</h5>
+                <h5 class="card-title">Author: Dynamic Catholic 2017</h5>
               </div>
             </div>
           </div>
@@ -346,13 +104,13 @@
           </div>
 
           <div class="col">
-            <div class="card h-100 pull-ups">
-              <img src="./resources/pullups.png" 
+            <div class="card h-100 ai">
+              <img src="./resources/ai.png" 
               class="card-img-top pdf-thumbnail" alt="PDF Thumbnail" data-bs-toggle="modal" 
-              data-bs-target="#pdfModal" data-pdf="./resources/pdfs/pull-ups.pdf">
+              data-bs-target="#pdfModal" data-pdf="./resources/pdfs/ai.pdf">
 
               <div class="card-body">
-                <h5 class="card-title">Author: Pullup & Dip</h5>
+                <h5 class="card-title">Author: Alina Udrea</h5>
               </div>
             </div>
           </div>
@@ -378,20 +136,29 @@
 
 
             <div id="pdfViewerContainer">
-              <canvas id="pdfViewer"></canvas>
-            </div>
-            
-
-<div class="container text-center ">
-  <div><span><span id="page_num"></span> / <span id="page_count"></span></span></div> 
-  &nbsp; &nbsp;
-  <br>
-  <button class="btn bg-secondary text-white"  id="prev"><</button>
-  <button class="btn bg-secondary  text-white" id="next">></button>
-</div>
-
-
+              <div id="loadingSpinner">
+                  <div class="spinner"></div>
+              </div>
+              <canvas id="pdfViewer"></canvas>        
           </div>
+          
+          
+
+            <div id="container controls">
+              <div class="row  bg-light" >
+                <div class="col-2 justify-content-center align-self-center" id="pageCount">0 - 0</div>
+                  <div class="container justify-content-center align-self-center mt-2 mb-1 col-8 text-center">
+                    <button class="btn btn-outline-info" id="zoomInBtn"><i class="fa-solid fa-magnifying-glass-minus"></i></button>
+                  <button class="btn btn-outline-info  ms-3" id="zoomOutBtn"><i class="fa-solid fa-magnifying-glass-plus"></i></button>
+
+                  </div>
+                  <div class="col-2 d-flex justify-content-center align-self-center">
+                    <button class="btn btn-outline-info" id="downloadBtn"><i class="fa-solid fa-download"></i></button></div>
+                  
+                </div>           
+              </div>
+            </div>
+
           <!-- New section for comments -->
           <div class="mt-3">
             <h5>Comments</h5>
@@ -436,7 +203,6 @@
     </div>
   </footer>
  
-
 
 
 

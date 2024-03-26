@@ -5,14 +5,15 @@ export default class CommentPoster {
       this.uri=''
     }
   
-    async getRows(pdf,postNum,uri) {
+    async getRows(pdf,postNum,uri,pathPdf) {
 
-      this.uri=uri
-      
-           
-
+      console.log(pdf + " " + postNum + " " + uri)
+      this.pathPdf = pathPdf
+      this.uri=uri    
       this.pdf = pdf
       this.postNum = postNum
+
+      
       let url = `https://script.google.com/macros/s/AKfycbyRS-CkZg1Y9eYsTWIBt_azYN2GWPKJS0koUTNc7CCVMeojIEeBff5Hne5GL135wslm/exec?pdfName=${pdf}`;
 
       console.log("se acaba de asignar el valor " + this.postNum)
@@ -28,6 +29,7 @@ export default class CommentPoster {
           li.innerHTML = `<strong>${obj.Name}:</strong> ${obj.Comment}`;
           // Append the li element to the ul parent
           commentsList.appendChild(li);
+          this.renderPdf()
         });
         return data;
       } catch (error) {
@@ -122,6 +124,120 @@ export default class CommentPoster {
     }, 3000); // Adjust the duration (in milliseconds) as needed
   }
   
+  renderPdf(){
+
+  
+        
+    var { pdfjsLib } = globalThis;
+    pdfjsLib.GlobalWorkerOptions.workerSrc = '/node_modules/pdfjs-dist/build/pdf.worker.mjs';
+
+    var url = '/public/'+ this.pathPdf;
+    var pdfDoc = null,
+      scale = .5,
+      pdfViewerContainer = document.getElementById('pdfViewerContainer'),
+      pageCount = document.getElementById('pageCount');
+
+      function renderPages(pdfDoc) {
+  pdfViewerContainer.innerHTML = ''; // Clear existing pages
+  for (var pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
+    var pageContainer = document.createElement('div');
+    pageContainer.className = 'pdf-page-container';
+    pdfViewerContainer.appendChild(pageContainer);
+    pdfDoc.getPage(pageNum).then(function(page) {
+      var viewport = page.getViewport({ scale: scale });
+      var canvas = document.createElement('canvas');
+  var context = canvas.getContext('2d', { willReadFrequently: true });
+
+      canvas.className = 'pdf-page';
+      pageContainer.appendChild(canvas);
+      var context = canvas.getContext('2d');
+
+      // Adjust canvas size to cover a significant portion of the view
+      var containerHeight = pdfViewerContainer.clientHeight;
+      var containerWidth = pdfViewerContainer.clientWidth;
+      var pageWidth = viewport.width;
+      var pageHeight = viewport.height;
+      
+      // Calculate the scale to fit the entire page in the container
+      var scaleX = containerWidth / pageWidth;
+      var scaleY = containerHeight / pageHeight;
+      var fitScale = Math.min(scaleX, scaleY);
+      
+      // Apply the fit scale to the viewport
+      viewport = page.getViewport({ scale: fitScale });
+
+      // Render PDF page onto the canvas
+      canvas.height = viewport.height;
+      canvas.width = viewport.width;
+      var renderContext = {
+        canvasContext: context,
+        viewport: viewport
+      };
+      page.render(renderContext);
+
+      // Add spacer between pages
+      if (pageNum < pdfDoc.numPages) {
+        var spacer = document.createElement('div');
+        spacer.className = 'spacer';
+        pdfViewerContainer.appendChild(spacer);
+      }
+    });
+  }
+}
+
+
+    function updatePageCount(pageNum) {
+      pageCount.textContent =  pageNum ?  '0'+ ' of ' + pdfDoc.numPages:pageNum + ' of ' + pdfDoc.numPages;
+    }
+
+    function adjustScale(newScale) {
+      if (newScale < 0.1) {
+        scale = 0.1;
+      } else {
+        scale = newScale;
+      }
+      renderPages(pdfDoc);
+    }
+
+    document.getElementById('zoomInBtn').addEventListener('click', function() {
+      adjustScale(scale + 0.1);
+    });
+
+    document.getElementById('zoomOutBtn').addEventListener('click', function() {
+      adjustScale(scale - 0.1);
+    });
+
+    document.getElementById('downloadBtn').addEventListener('click', function() {
+      window.open(url, '_blank');
+    });
+
+    pdfjsLib.getDocument(url).promise.then(function(pdfDoc_) {
+      console.log('PDF loaded y resuleto ');
+      
+      pdfDoc = pdfDoc_;
+      renderPages(pdfDoc);
+    });
+
+    // Add event listener for scroll events on the PDF container
+    pdfViewerContainer.addEventListener('scroll', function() {
+      var scrollTop = pdfViewerContainer.scrollTop;
+      var pageHeight = pdfViewerContainer.clientHeight;
+      var totalHeight = pdfViewerContainer.scrollHeight;
+      var totalPages = pdfDoc.numPages;
+
+      // Calculate current page based on scroll position
+      var currentPage = Math.ceil((totalPages * scrollTop) / (totalHeight - pageHeight));
+
+      // Update page count
+      updatePageCount(currentPage);
+    });
+    
+    
+}
+
+
+
+
   }
   
   
