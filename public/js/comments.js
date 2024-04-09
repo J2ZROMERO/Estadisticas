@@ -71,6 +71,7 @@ export default class CommentPoster {
     // Post data to the API endpoint
     fetch(url, {
       method: 'POST',
+      cors: 'no-cors',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -102,7 +103,7 @@ export default class CommentPoster {
 
 renderPdf(){
   var { pdfjsLib } = globalThis;
-  pdfjsLib.GlobalWorkerOptions.workerSrc = '/node_modules/pdfjs-dist/build/pdf.worker.mjs';
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.mjs';
 
   var url = '/public/'+ this.pathPdf;
   var pdfDoc = null,
