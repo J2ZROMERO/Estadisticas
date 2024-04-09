@@ -5,7 +5,6 @@ const commentPoster = new CommentPoster();
 
 // Get DOM elements
 const pdfViewer = document.getElementById('pdfViewer');
-const commentField = document.getElementById('comment');
 const pdfThumbnails = document.querySelectorAll('.pdf-thumbnail');
 const myModal = new bootstrap.Modal(document.getElementById('pdfModal'));
 
