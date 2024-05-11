@@ -1,9 +1,3 @@
-import * as dotenv from 'dotenv';
-dotenv.config();
-
-
-console.log(process.env.API_KEY);
-
 import CommentPoster from './comments.js';
 
 // Initialize CommentPoster instance
