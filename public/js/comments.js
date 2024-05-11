@@ -10,7 +10,7 @@ export default class CommentPoster {
     this.uri = uri;
     this.pdf = pdf;
     this.postNum = postNum;
-    let url = `${process.env.ID_GOOGLE}?pdfName=${pdf}`;
+    let url = `${process.env.API_KEY}?pdfName=${pdf}`;
     this.renderPdf();
     try {
       const response = await fetch(url);
@@ -38,7 +38,7 @@ export default class CommentPoster {
   
   async afterPost() {
     document.getElementById('commentsList').innerHTML = "";
-    let url = `${process.env.ID_GOOGLE}?pdfName=${this.pdf}`;
+    let url = `${process.env.API_KEY}?pdfName=${this.pdf}`;
     
     try {
       const response = await fetch(url);
@@ -66,7 +66,7 @@ export default class CommentPoster {
 
 
   postComment(name, comment) {
-    const url = `${process.env.ID_GOOGLE}?action=${this.postNum}`;
+    const url = `${process.env.API_KEY}?action=${this.postNum}`;
     
     // Post data to the API endpoint
     fetch(url, {
