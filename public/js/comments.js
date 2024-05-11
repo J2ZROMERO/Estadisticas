@@ -10,7 +10,7 @@ export default class CommentPoster {
     this.uri = uri;
     this.pdf = pdf;
     this.postNum = postNum;
-    let url = `${process.env.API_KEY}?pdfName=${pdf}`;
+    let url = `https://script.google.com/macros/s/AKfycbzMw138-uav9dy7FKc_XSIG-WUCq09xrThs9goSrRU4hRuwHa5JC5BV2lCvgSawUOaz/exec?pdfName=${pdf}`;
     this.renderPdf();
     try {
       const response = await fetch(url);
@@ -38,7 +38,7 @@ export default class CommentPoster {
   
   async afterPost() {
     document.getElementById('commentsList').innerHTML = "";
-    let url = `${process.env.API_KEY}?pdfName=${this.pdf}`;
+    let url = `https://script.google.com/macros/s/AKfycbzMw138-uav9dy7FKc_XSIG-WUCq09xrThs9goSrRU4hRuwHa5JC5BV2lCvgSawUOaz/exec?pdfName=${this.pdf}`;
     
     try {
       const response = await fetch(url);
@@ -66,7 +66,7 @@ export default class CommentPoster {
 
 
   postComment(name, comment) {
-    const url = `${process.env.API_KEY}?action=${this.postNum}`;
+    const url = `https://script.google.com/macros/s/AKfycbzMw138-uav9dy7FKc_XSIG-WUCq09xrThs9goSrRU4hRuwHa5JC5BV2lCvgSawUOaz/exec?action=${this.postNum}`;
     
     // Post data to the API endpoint
     fetch(url, {
