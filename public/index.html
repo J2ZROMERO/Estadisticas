@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDF Viewer</title>
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.mjs" type="module"></script>
+  <script src="https://kit.fontawesome.com/be4325e697.js" crossorigin="anonymous"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="/assets/css/style.css" type="text/css">
+
+</head>
+<body>
+
+
+  <!-- Comment form for PDF (initially hidden) -->
+<div id="errorPopup" class="error-popup d-none">
+  <span id="errorMessage"></span>
+</div>
+
+  <header class="p-3 mb-3 bg-danger text-white">
+    <h1>GOOGLE-SCRIPTS & PDFJS</h1>
+  </header>
+  
+  
+  
+  <div class="container container d-flex justify-content-center mh-100vh">
+    <div class="row justify-content-center mt-3">
+      <div class="col-12">
+        <div class="row row-cols-1 row-cols-md-3 g-3 mb-5">
+         
+          <!-- Starting cards elements-->
+          <div class="col">
+            <div class="card h-100 happines">
+              <img src="./resources/happines.png" class="card-img-top pdf-thumbnail" alt="PDF Thumbnail" 
+              data-bs-toggle="modal" data-bs-target="#pdfModal" data-pdf="./resources/pdfs/happines.pdf">
+              <div class="card-body">
+                <h5 class="card-title">Author: Dynamic Catholic 2017</h5>
+              </div>
+            </div>
+          </div>
+          
+          
+          <div class="col">
+            <div class="card h-100 Cats">
+              <img src="./resources/catsandpeople.png" 
+              class="card-img-top pdf-thumbnail pdf2" alt="PDF Thumbnail" data-bs-toggle="modal" 
+              data-bs-target="#pdfModal" data-pdf="./resources/pdfs/Cats.pdf">
+
+              <div class="card-body">
+                <h5 class="card-title">Author: Cats Protection</h5>
+              </div>
+            </div>
+          </div>
+
+          <div class="col">
+            <div class="card h-100 colors">
+              <img src="./resources/colors.png" 
+              class="card-img-top pdf-thumbnail" alt="PDF Thumbnail" data-bs-toggle="modal" 
+              data-bs-target="#pdfModal" data-pdf="./resources/pdfs/colors.pdf">
+
+              <div class="card-body">
+                <h5 class="card-title">Author: A. Hurlbert and Y. Ling</h5>
+              </div>
+            </div>
+          </div>
+
+          <div class="col">
+            <div class="card h-100 rabbit">
+              <img src="./resources/abit.png" 
+              class="card-img-top pdf-thumbnail" alt="PDF Thumbnail" data-bs-toggle="modal" 
+              data-bs-target="#pdfModal" data-pdf="./resources/pdfs/rabbit.pdf">
+
+              <div class="card-body">
+                <h5 class="card-title">Author: T. Albert-compressedT</h5>
+              </div>
+            </div>
+          </div>
+
+          <div class="col">
+            <div class="card h-100 communism">
+              <img src="./resources/communism.png" 
+              class="card-img-top pdf-thumbnail" alt="PDF Thumbnail" data-bs-toggle="modal" 
+              data-bs-target="#pdfModal" data-pdf="./resources/pdfs/communism.pdf">
+
+              <div class="card-body">
+                <h5 class="card-title">Author: Karl Marx,Fredrick Engels</h5>
+              </div>
+            </div>
+          </div>
+
+          <div class="col">
+            <div class="card h-100 ai">
+              <img src="./resources/ai.png" 
+              class="card-img-top pdf-thumbnail" alt="PDF Thumbnail" data-bs-toggle="modal" 
+              data-bs-target="#pdfModal" data-pdf="./resources/pdfs/ai.pdf">
+
+              <div class="card-body">
+                <h5 class="card-title">Author: Alina Udrea</h5>
+              </div>
+            </div>
+          </div>
+
+          <!-- Ending cards elements-->
+        </div>
+      </div>
+    </div>
+  </div>
+
+<div class="modal fade" id="pdfModal" tabindex="-1" aria-labelledby="pdfModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-fullscreen">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">PDF Viewer</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="embed-responsive embed-responsive-16by9">
+            <!-- <iframe class="embed-responsive-item" id="pdfViewer" src="" allowfullscreen></iframe>
+            <div id="pdfViewer"  width="800" height="600"></div> -->
+
+
+
+            <div id="pdfViewerContainer">
+              <div id="loadingSpinner">
+                  <div class="spinner"></div>
+              </div>
+              <canvas id="pdfViewer"></canvas>        
+          </div>
+          
+          
+
+            <div id="container controls">
+              <div class="row  bg-light" >
+                <div class="col-2 justify-content-center align-self-center" id="pageCount">0 - 0</div>
+                  <div class="container justify-content-center align-self-center mt-2 mb-1 col-8 text-center">
+                    <button class="btn btn-outline-info" id="zoomInBtn"><i class="fa-solid fa-magnifying-glass-minus"></i></button>
+                  <button class="btn btn-outline-info  ms-3" id="zoomOutBtn"><i class="fa-solid fa-magnifying-glass-plus"></i></button>
+
+                  </div>
+                  <div class="col-2 d-flex justify-content-center align-self-center">
+                    <button class="btn btn-outline-info" id="downloadBtn"><i class="fa-solid fa-download"></i></button></div>
+                  
+                </div>           
+              </div>
+            </div>
+
+          <!-- New section for comments -->
+          <div class="mt-3">
+            <h5>Comments</h5>
+            <ul class="list-group" id="commentsList" dynamically added here -->
+            </ul>
+              <!-- Comments will be dynamically added here -->
+          </div>
+        </div>
+
+  
+
+<!-- Button to toggle comment form -->
+<button type="button" class="btn btn-primary mt-3" id="toggleCommentForm">Add Comment</button>
+
+
+
+<form class="modal-footer d-flex justify-content-center align-items-center d-none" id="commentForm">
+  <div class="text-center col-12 col-sm-6">
+    <div class="form-group text-start">
+      <label for="name">Name:</label>
+      <input type="text" class="form-control name-area" id="name" required>
+    </div>
+    <div class="form-group text-start">
+      <label for="comment">Comment:</label>
+      <textarea class="form-control comment-area" id="comment" rows="3" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary mt-2">Submit</button>
+  </div>
+</form>
+
+      </div>
+    </div>
+  </div>
+
+  
+
+
+  <!-- Sticky footer -->
+  <footer class="footer fixed-bottom bg-light text-center py-1">
+    <div class="container">
+      <span class="text-muted">Made with Google Scripts and Node.js </span>
+    </div>
+  </footer>
+ 
+
+
+
+
+
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+
+  <script src="./js/index.js" type="module">  </script>
+</body>
+</html>
