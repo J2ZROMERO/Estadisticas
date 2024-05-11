@@ -71,7 +71,7 @@ export default class CommentPoster {
     // Post data to the API endpoint
     fetch(url, {
       method: 'POST',
-      cors: 'no-cors',
+      mode: 'no-cors',
       headers: {
         'Content-Type': 'application/json'
       },
